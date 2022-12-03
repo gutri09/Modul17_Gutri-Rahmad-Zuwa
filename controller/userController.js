@@ -53,13 +53,12 @@ const login = async(req, res, next) => {
         process.env.SECRET
         );
         res.cookie("JWT",token, {httpOnly: true, sameSite:"strict",})
-        res.status(200).send({
+        res.status(200).json({
         message: "User berhasil masuk!",
         //11. kembalikan nilai id, email, dan username
         id: user[0].id,
         user: user[0].username,
         email: user[0].email,
-        token: token,
         });
         }
         else {
@@ -94,9 +93,9 @@ const logout = async(req, res, next) => {
 const verify = async(req, res, next) => {
     try {
         // 13. membuat verify
-        const email= req.verified.email;
+        const {email} = req.body;
         const user = await db.query(`SELECT * FROM unhan_modul_17 WHERE email=$1;`, [email])
-        return res.status(200).send({
+        return res.status(200).json({
             id: user.rows[0].id,
             username: user.rows[0].username,
             email: user.rows[0].email,
